@@ -9,7 +9,7 @@
     "start": "NODE_ENV=prod node src/server.js",
     "start:dev": "NODE_ENV=dev npx nodemon src/server.js",
     "start:test": "NODE_ENV=test npx nodemon src/server.js",
-    "deploy": "git push heroku master",
+    "deploy": "git push heroku main",
     "test:watch": "NODE_ENV=test npx jest --watch"
   },
   "keywords": [],
