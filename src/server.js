@@ -1,4 +1,5 @@
 import app from './app.js';
+import setup from './setup.js';
 
 app.listen(process.env.PORT, () => {
     console.clear();
