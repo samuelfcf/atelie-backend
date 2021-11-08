@@ -4,13 +4,13 @@ import app from '../src/app.js';
 import connection from '../src/database/connection.js';
 
 afterAll(async () => {
-    connection.end();
+  connection.end();
 });
 
 describe('GET /', () => {
-    test('returns 200 for server ok!!', async () => {
-        const result = await supertest(app).get('/');
+  test('returns 200 for server ok!!', async () => {
+    const result = await supertest(app).get('/');
 
-        expect(result.status).toEqual(200);
-    });
+    expect(result.status).toEqual(200);
+  });
 });
