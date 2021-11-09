@@ -5,7 +5,7 @@ async function getProducts(req, res) {
   try {
     const result = await connection.query('SELECT * FROM products;');
     if (result.rowCount === 0) {
-      return res.statys(404).send({
+      return res.status(404).send({
         message: 'Não existem produtos cadastrados.',
       });
     }
