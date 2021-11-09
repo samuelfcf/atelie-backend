@@ -1,19 +1,8 @@
 /* eslint-disable no-undef */
 import supertest from 'supertest';
-import faker from 'faker';
 import app from '../src/app.js';
 import connection from '../src/database/connection.js';
-
-const fakeUser = {
-  name: faker.name.findName(),
-  email: faker.internet.email(),
-  password: faker.internet.password(),
-};
-
-const wrongFakeUser = {
-  name: faker.name.findName(),
-  email: faker.internet.email(),
-};
+import * as F from '../src/factories/users.factory.js';
 
 afterAll(async () => {
   connection.end();
@@ -28,23 +17,41 @@ describe('GET /', () => {
 });
 
 describe('POST /sign-up', () => {
-  afterAll(async () => {
-    await connection.query('DELETE FROM users');
-  });
-
   test('should return status 201 if the user was successfully registered', async () => {
-    const result = await supertest(app).post('/sign-up').send(fakeUser);
+    const result = await supertest(app).post('/sign-up').send(F.fakeUserSignUp);
     expect(result.status).toEqual(201);
     expect(result.body).toEqual({ message: 'Usuário cadastrado com sucesso!' });
   });
 
   test('should return status 409 if the email was already in use', async () => {
-    const result = await supertest(app).post('/sign-up').send(fakeUser);
+    const result = await supertest(app).post('/sign-up').send(F.fakeUserSignUp);
     expect(result.status).toEqual(409);
   });
 
   test('should return status 400 if the request did not passed the joi validation', async () => {
-    const result = await supertest(app).post('/sign-up').send(wrongFakeUser);
+    const result = await supertest(app).post('/sign-up').send(F.wrongFakeUserSignUp);
+    expect(result.status).toEqual(400);
+  });
+});
+
+describe('POST /sign-in', () => {
+  afterAll(async () => {
+    await F.deleteSessions();
+    await F.deleteUsers();
+  });
+
+  test('should return status 200 if the user was successfully logged', async () => {
+    const result = await supertest(app).post('/sign-in').send(F.fakeUserSignIn);
+    expect(result.status).toEqual(200);
+  });
+
+  test('should return status 404 if the user was not registered', async () => {
+    const result = await supertest(app).post('/sign-in').send(F.fakeUserNotRegistered);
+    expect(result.status).toEqual(404);
+  });
+
+  test('should return status 400 if the request did not passed the joi validation', async () => {
+    const result = await supertest(app).post('/sign-in').send(F.wrongFakeUserSignIn);
     expect(result.status).toEqual(400);
   });
 });
