@@ -58,9 +58,9 @@ async function signInUser(req, res) {
 
     await connection.query(`
       INSERT INTO sessions
-          (users_id, token)
+        (users_id, token)
       VALUES
-          ($1, $2)
+        ($1, $2)
     ;`, [user.id, token]);
 
     return res.status(200).send({
