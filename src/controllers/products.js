@@ -20,7 +20,8 @@ async function getProduct(req, res) {
   try {
     const { id } = req.params;
 
-    const result = await connection.query(`
+    const result = await connection.query(
+      `
         SELECT 
           products.*,
           products_sizes.quantity,
@@ -31,7 +32,9 @@ async function getProduct(req, res) {
           ON products.id = products_sizes.product_id
         JOIN sizes
           ON products_sizes.size_id = sizes.id
-        WHERE products.id = $1;`, [id]);
+        WHERE products.id = $1;`,
+      [id],
+    );
 
     const productExists = result.rows;
     if (productExists.length === 0) {
@@ -44,7 +47,4 @@ async function getProduct(req, res) {
   }
 }
 
-export {
-  getProducts,
-  getProduct,
-};
+export { getProducts, getProduct };
