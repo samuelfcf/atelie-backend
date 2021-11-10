@@ -26,7 +26,9 @@ async function postUser(req, res) {
       message: 'Usuário cadastrado com sucesso!',
     });
   } catch {
-    return res.sendStatus(500);
+    return res.status(500).send({
+      message: 'Não foi possível cadastrar o usuário',
+    });
   }
 }
 
@@ -64,12 +66,34 @@ async function signInUser(req, res) {
     return res.status(200).send({
       token,
     });
-  } catch (err) {
-    return res.sendStatus(500);
+  } catch {
+    return res.status(500).send({
+      message: 'Não foi possível logar o usuário.',
+    });
+  }
+}
+
+async function signOutUser(req, res) {
+  const { authorization } = req.headers;
+  const token = authorization?.replace('Bearer ', '');
+
+  if (!token) {
+    return res.sendStatus(401);
+  }
+
+  try {
+    await connection.query('DELETE FROM sessions WHERE token = $1', [token]);
+
+    return res.sendStatus(200);
+  } catch {
+    return res.status(500).send({
+      message: 'Não foi possível deslogar o usuário.',
+    });
   }
 }
 
 export {
   postUser,
   signInUser,
+  signOutUser,
 };
