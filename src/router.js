@@ -1,6 +1,6 @@
 import { Router } from 'express';
+import { postUser, signInUser, signOutUser } from './controllers/users.js';
 import getProducts from './controllers/products.js';
-import postUser from './controllers/users.js';
 
 const router = Router();
 
@@ -11,7 +11,8 @@ router.get('/', (req, res) => {
 });
 
 router.post('/sign-up', postUser);
-
+router.post('/sign-in', signInUser);
+router.delete('/sign-out', signOutUser);
 router.get('/products', getProducts);
 
 export default router;
