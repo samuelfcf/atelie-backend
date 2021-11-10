@@ -1,4 +1,5 @@
 import faker from 'faker';
+import bcrypt from 'bcrypt';
 import connection from '../database/connection';
 
 const fakeUserSignUp = {
@@ -26,11 +27,14 @@ const wrongFakeUserSignIn = {
   email: fakeUserSignUp.email,
 };
 
-const createFakeUser = () => connection.query('INSERT INTO users (name, email, password) VALUES ($1, $2, $3)', [fakeUserSignUp.name, fakeUserSignUp.email, fakeUserSignUp.password]);
+const createFakeUser = async () => {
+  const passwordHash = bcrypt.hashSync(fakeUserSignUp.password, 10);
+  return connection.query('INSERT INTO users (name, email, password) VALUES ($1, $2, $3);', [fakeUserSignUp.name, fakeUserSignUp.email, passwordHash]);
+};
 
-const deleteUsers = () => connection.query('DELETE FROM users');
+const deleteUsers = async () => connection.query('DELETE FROM users;');
 
-const deleteSessions = () => connection.query('DELETE FROM sessions');
+const deleteSessions = async () => connection.query('DELETE FROM sessions;');
 
 export {
   fakeUserSignUp,

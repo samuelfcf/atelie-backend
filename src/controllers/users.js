@@ -61,9 +61,10 @@ async function signInUser(req, res) {
           ($1, $2)
     ;`, [user.id, token]);
 
-    return res.send(token);
+    return res.status(200).send({
+      token,
+    });
   } catch (err) {
-    console.log(err.message);
     return res.sendStatus(500);
   }
 }
