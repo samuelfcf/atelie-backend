@@ -1,4 +1,5 @@
 import connection from '../database/connection.js';
+import updateStockSchema from '../schemas/sizeSchema.js';
 
 async function getProducts(req, res) {
   try {
@@ -47,4 +48,35 @@ async function getProduct(req, res) {
   }
 }
 
-export { getProducts, getProduct };
+async function updateSizeQuantity(req, res) {
+  try {
+    const { id } = req.params;
+    const { size } = req.body;
+
+    const { error } = updateStockSchema.validate({ size });
+
+    if (error) {
+      return res.sendStatus(400);
+    }
+
+    const result = await connection.query('SELECT * FROM sizes WHERE name = $1;', [size]);
+
+    if (result.rowCount === 0) {
+      return res.sendStatus(404);
+    }
+
+    const sizeId = result.rows[0].id;
+    await connection.query(
+      'UPDATE products_sizes SET quantity = quantity - 1 WHERE product_id = $1 AND size_id = $2;',
+      [id, sizeId],
+    );
+
+    return res.sendStatus(200);
+  } catch (err) {
+    return res.status(500).send({
+      message: 'Não foi possível atualizar o estoque',
+    });
+  }
+}
+
+export { getProducts, getProduct, updateSizeQuantity };
