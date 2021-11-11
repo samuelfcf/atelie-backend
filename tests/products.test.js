@@ -13,7 +13,7 @@ const fakeProduct = {
 
 const fakeSize = {
   id: faker.datatype.number(),
-  name: 'P',
+  name: faker.datatype.string(),
 };
 
 const fakeSizeToUpdate = {
@@ -123,22 +123,21 @@ describe('PUT /product/:id', () => {
     );
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await connection.query('DELETE FROM products_sizes;');
     await connection.query('DELETE FROM sizes;');
     await connection.query('DELETE FROM products;');
   });
 
   test('returns 404 when size do not exists in database', async () => {
-    const result = await supertest(app).put(`/product/${fakeProduct.id}`).send(fakeWrongSize.name);
+    const result = await supertest(app).put(`/product/${fakeProduct.id}`).send({
+      size: fakeWrongSize.name,
+    });
     expect(result.status).toEqual(404);
   });
 
-/*   test('returns 200 for valid size name', async () => {
-    console.log(fakeProduct.id);
-    console.log(fakeSize.name);
-    console.log(fakeSizeToUpdate);
+  test('returns 200 for valid size name', async () => {
     const result = await supertest(app).put(`/product/${fakeProduct.id}`).send(fakeSizeToUpdate);
     expect(result.status).toEqual(200);
-  }); */
+  });
 });

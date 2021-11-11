@@ -15,6 +15,6 @@ router.post('/sign-in', signInUser);
 router.delete('/sign-out', signOutUser);
 router.get('/products', getProducts);
 router.get('/product/:id', getProduct);
-router.put('/products/:id', updateSizeQuantity);
+router.put('/product/:id', updateSizeQuantity);
 
 export default router;
