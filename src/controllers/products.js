@@ -95,11 +95,18 @@ async function createCurrentOrder(req, res) {
     const currentOrderExists = await connection.query('SELECT * FROM orders WHERE user_id = $1 AND is_finished = $2;', [user.users_id, false]);
 
     if (currentOrderExists.rowCount > 0) {
-      return res.sendStatus(200);
+      return res.status(200).send({
+        order_id: currentOrderExists.rows[0].id,
+      });
     }
 
     await connection.query('INSERT INTO orders (user_id, date) VALUES ($1, NOW());', [user.users_id]);
-    return res.sendStatus(200);
+
+    const newCurrentOrder = await connection.query('SELECT * FROM orders WHERE user_id = $1 AND is_finished = $2;', [user.users_id, false]);
+
+    return res.status(200).send({
+      order_id: newCurrentOrder.rows[0].id,
+    });
   } catch {
     return res.status(500).send({
       message: 'Não foi possível criar novo pedido',
