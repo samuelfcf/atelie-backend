@@ -79,4 +79,28 @@ async function updateSizeQuantity(req, res) {
   }
 }
 
-export { getProducts, getProduct, updateSizeQuantity };
+async function createCurrentOrder(req, res) {
+  try {
+    const authToken = req.headers.authorization;
+    const [, token] = authToken?.split(' ');
+
+    const result = await connection.query('SELECT * FROM sessions WHERE token = $1;', [token]);
+
+    if (result.rowCount === 0) {
+      return res.sendStatus(404);
+    }
+
+    const user = result.rows[0];
+
+    return res.status(200).send(user);
+  } catch {
+    return res.sendStatus(500);
+  }
+}
+
+export {
+  getProducts,
+  getProduct,
+  updateSizeQuantity,
+  createCurrentOrder,
+};
