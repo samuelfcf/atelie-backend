@@ -81,8 +81,8 @@ async function updateSizeQuantity(req, res) {
 
 async function createCurrentOrder(req, res) {
   try {
-    const authToken = req.headers.authorization;
-    const [, token] = authToken?.split(' ');
+    const { authorization } = req.headers;
+    const token = authorization?.replace('Bearer ', '');
 
     const result = await connection.query('SELECT * FROM sessions WHERE token = $1;', [token]);
 
@@ -92,9 +92,18 @@ async function createCurrentOrder(req, res) {
 
     const user = result.rows[0];
 
-    return res.status(200).send(user);
+    const currentOrderExists = await connection.query('SELECT * FROM orders WHERE user_id = $1 AND is_finished = $2;', [user.users_id, false]);
+
+    if (currentOrderExists.rowCount > 0) {
+      return res.sendStatus(200);
+    }
+
+    await connection.query('INSERT INTO orders (user_id, date) VALUES ($1, NOW());', [user.users_id]);
+    return res.sendStatus(200);
   } catch {
-    return res.sendStatus(500);
+    return res.status(500).send({
+      message: 'Não foi possível criar novo pedido',
+    });
   }
 }
 

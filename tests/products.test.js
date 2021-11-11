@@ -32,6 +32,26 @@ const fakeProductSize = {
   quantity: faker.datatype.number(),
 };
 
+const fakeUser = {
+  id: faker.datatype.number(),
+  name: faker.name.findName(),
+  email: faker.internet.email(),
+  password: faker.internet.password(),
+};
+
+const fakeSession = {
+  id: faker.datatype.number(),
+  users_id: fakeUser.id,
+  token: faker.datatype.uuid(),
+};
+
+const fakeOrders = {
+  id: faker.datatype.number(),
+  user_id: fakeUser.id,
+  date: faker.datatype.datetime(),
+  is_finished: false,
+};
+
 afterAll(async () => {
   connection.end();
 });
@@ -138,6 +158,39 @@ describe('PUT /product/:id', () => {
 
   test('returns 200 for valid size name', async () => {
     const result = await supertest(app).put(`/product/${fakeProduct.id}`).send(fakeSizeToUpdate);
+    expect(result.status).toEqual(200);
+  });
+});
+
+describe('POST /product:id', () => {
+  beforeAll(async () => {
+    await connection.query(
+      'INSERT INTO products VALUES ($1, $2, $3, $4);',
+      [fakeProduct.id, fakeProduct.name, fakeProduct.description, fakeProduct.value],
+    );
+
+    await connection.query('INSERT INTO users (id, name, email, password) VALUES ($1, $2, $3, $4);', [fakeUser.id, fakeUser.name, fakeUser.email, fakeUser.password]);
+
+    await connection.query('INSERT INTO sessions (id, users_id, token) VALUES ($1, $2, $3);', [fakeSession.id, fakeSession.users_id, fakeSession.token]);
+
+    await connection.query('INSERT INTO orders (id, user_id, date, is_finished) VALUES ($1, $2, $3, $4);', [fakeOrders.id, fakeOrders.user_id, fakeOrders.date, fakeOrders.is_finished]);
+  });
+
+  afterAll(async () => {
+    await connection.query('DELETE FROM orders;');
+    await connection.query('DELETE FROM sessions;');
+    await connection.query('DELETE FROM users;');
+    await connection.query('DELETE FROM products;');
+    await connection.query('DELETE FROM orders;');
+  });
+
+  test('returns 404 for user not found', async () => {
+    const result = await supertest(app).post(`/product/${fakeProduct.id}`).set('Authorization', 'Bearer ');
+    expect(result.status).toEqual(404);
+  });
+
+  test('returns 200 for create orders sucess', async () => {
+    const result = await supertest(app).post(`/product/${fakeProduct.id}`).set('Authorization', `Bearer ${fakeSession.token}`);
     expect(result.status).toEqual(200);
   });
 });

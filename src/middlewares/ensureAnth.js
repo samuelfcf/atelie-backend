@@ -18,14 +18,8 @@ async function ensureAuth(req, res, next) {
     }
 
     const user_id = result.rows[0].users_id;
-
     const resultUser = await connection.query('SELECT * FROM users WHERE id = $1;', [user_id]);
-
     const user = resultUser.rows[0];
-
-    console.log(user);
-    console.log(user_id);
-    console.log(user.id);
 
     if (!user || (user_id && (parseInt(user.id) !== parseInt(user_id)))) {
       return res.sendStatus(401);
