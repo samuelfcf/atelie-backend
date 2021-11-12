@@ -26,7 +26,7 @@ export default async function updateAddress(req, res) {
 
     const getUser = await connection.query('SELECT * FROM users WHERE id = $1', [session.users_id]);
     const user = getUser.rows[0];
-    if (user.address_cep || user.address_number) {
+    if (user.address_cep && user.address_number) {
       return res.sendStatus(409);
     }
 

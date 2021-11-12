@@ -87,7 +87,7 @@ describe('POST /sign-out', () => {
   });
 });
 
-describe('PUT /users', () => {
+describe('PUT /user-data', () => {
   beforeAll(async () => {
     await F.createFakeUser();
     await F.createFakeSession();
