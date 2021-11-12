@@ -1,5 +1,8 @@
+/* eslint-disable object-curly-newline */
+/* eslint-disable max-len */
 import connection from '../database/connection.js';
 import updateStockSchema from '../schemas/sizeSchema.js';
+import productCartSchema from '../schemas/productCartSchema.js';
 
 async function getProducts(req, res) {
   try {
@@ -114,9 +117,38 @@ async function createCurrentOrder(req, res) {
   }
 }
 
+async function createCart(req, res) {
+  try {
+    const { id } = req.params;
+    const { productName, productSize, productValue, productQty } = req.body;
+
+    const { error } = productCartSchema.validate({ productName, productSize, productValue, productQty });
+
+    if (error) {
+      console.log(error);
+      return res.sendStatus(400);
+    }
+
+    const result = await connection.query('SELECT * FROM orders WHERE id = $1;', [id]);
+
+    if (result.rowCount === 0) {
+      return res.sendStatus(404);
+    }
+
+    await connection.query('INSERT INTO carts (order_id, product_name, product_size, product_value, product_qty) VALUES ($1, $2, $3, $4, $5);', [id, productName, productSize, productValue, productQty]);
+
+    return res.sendStatus(200);
+  } catch {
+    return res.status(500).send({
+      message: 'Não foi possível criar novo carrinho de compras',
+    });
+  }
+}
+
 export {
   getProducts,
   getProduct,
   updateSizeQuantity,
   createCurrentOrder,
+  createCart,
 };
