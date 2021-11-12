@@ -27,7 +27,7 @@ export default async function updateAddress(req, res) {
     const getUser = await connection.query('SELECT * FROM users WHERE id = $1', [session.users_id]);
     const user = getUser.rows[0];
 
-    connection.query('UPDATE users SET address_cep = $1, address_number = $2 WHERE id = $3', [cep, number, user.id]);
+    await connection.query('UPDATE users SET address_cep = $1, address_number = $2 WHERE id = $3', [cep, number, user.id]);
     return res.sendStatus(200);
   } catch {
     return res.status(500).send({
