@@ -125,7 +125,6 @@ async function createCart(req, res) {
     const { error } = productCartSchema.validate({ productName, productSize, productValue, productQty });
 
     if (error) {
-      console.log(error);
       return res.sendStatus(400);
     }
 
