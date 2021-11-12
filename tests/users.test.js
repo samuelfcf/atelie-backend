@@ -86,3 +86,35 @@ describe('POST /sign-out', () => {
     expect(result.status).toEqual(401);
   });
 });
+
+describe('PUT /users', () => {
+  beforeAll(async () => {
+    await F.createFakeUser();
+    await F.createFakeSession();
+  });
+
+  afterAll(async () => {
+    await F.deleteSessions();
+    await F.deleteUsers();
+  });
+
+  test('should return status 404 if the request token does not belong to any user', async () => {
+    const result = await supertest(app).put('/users').set('Authorization', `Bearer ${F.fakeSession.token}123`);
+    expect(result.status).toEqual(404);
+  });
+
+  test('should return status 401 if the request was missing token', async () => {
+    const result = await supertest(app).put('/users');
+    expect(result.status).toEqual(401);
+  });
+
+  test('should return status 200 if the user was successfully updated', async () => {
+    const result = await supertest(app).put('/users').set('Authorization', `Bearer ${F.fakeSession.token}`);
+    expect(result.status).toEqual(200);
+  });
+
+  test('should return status 409 if the columns were already occupied', async () => {
+    const result = await supertest(app).put('/users').set('Authorization', `Bearer ${F.fakeSession.token}`);
+    expect(result.status).toEqual(409);
+  });
+});

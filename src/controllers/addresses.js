@@ -1,4 +1,5 @@
 import connection from '../database/connection.js';
+import addressSchema from '../schemas/addressSchema.js';
 
 export default async function updateAddress(req, res) {
   const { authorization } = req.headers;
@@ -11,6 +12,12 @@ export default async function updateAddress(req, res) {
   const { cep, number } = req.body;
 
   try {
+    const { error } = addressSchema.validate({ cep, number });
+
+    if (error) {
+      return res.sendStatus(400);
+    }
+
     const getSession = await connection.query('SELECT * FROM sessions WHERE token = $1', [token]);
     if (getSession.rowCount === 0) {
       return res.sendStatus(404);
