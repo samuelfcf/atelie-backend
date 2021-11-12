@@ -87,7 +87,7 @@ describe('POST /sign-out', () => {
   });
 });
 
-describe('PUT /user-data', () => {
+describe('PUT /users', () => {
   beforeAll(async () => {
     await F.createFakeUser();
     await F.createFakeSession();
@@ -111,11 +111,6 @@ describe('PUT /user-data', () => {
   test('should return status 200 if the user was successfully updated', async () => {
     const result = await supertest(app).put('/users').send(F.fakeAddress).set('Authorization', `Bearer ${F.fakeSession.token}`);
     expect(result.status).toEqual(200);
-  });
-
-  test('should return status 409 if the columns were already occupied', async () => {
-    const result = await supertest(app).put('/users').send(F.fakeAddress).set('Authorization', `Bearer ${F.fakeSession.token}`);
-    expect(result.status).toEqual(409);
   });
 
   test('should return status 400 if was a bad request', async () => {

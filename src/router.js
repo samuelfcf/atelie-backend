@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 router.post('/sign-up', postUser);
 router.post('/sign-in', signInUser);
 router.delete('/sign-out', signOutUser);
-router.put('/user-data', updateAddress);
+router.put('/users', updateAddress);
 
 router.get('/products', getProducts);
 router.get('/product/:id', getProduct);
