@@ -34,6 +34,16 @@ const fakeSession = {
   token: faker.datatype.uuid(),
 };
 
+const fakeAddress = {
+  cep: String(faker.datatype.number({ min: 0, max: 9, precision: 0.0000001 })).replace(/[^0-9]/g, ''),
+  number: faker.datatype.number(),
+};
+
+const wrongFakeAddress = {
+  cep: String(faker.datatype.number()),
+  number: faker.datatype.number(),
+};
+
 const createFakeUser = async () => {
   const passwordHash = bcrypt.hashSync(fakeUserSignUp.password, 10);
   return connection.query('INSERT INTO users (name, email, password) VALUES ($1, $2, $3);', [fakeUserSignUp.name, fakeUserSignUp.email, passwordHash]);
@@ -56,6 +66,8 @@ export {
   fakeUserNotRegistered,
   wrongFakeUserSignIn,
   fakeSession,
+  fakeAddress,
+  wrongFakeAddress,
   createFakeUser,
   createFakeSession,
   deleteUsers,

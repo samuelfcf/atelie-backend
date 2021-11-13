@@ -11,7 +11,7 @@ async function postUser(req, res) {
     const { error } = userSchema.validate({ name, email, password });
 
     if (error) {
-      return res.sendStatus(400);
+      return res.status(400).send(error);
     }
 
     const result = await connection.query('SELECT * FROM users WHERE email = $1', [email]);
