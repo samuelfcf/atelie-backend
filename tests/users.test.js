@@ -39,8 +39,8 @@ describe('POST /sign-up', () => {
 });
 
 describe('POST /sign-in', () => {
-  beforeAll(async () => {
-    await F.createFakeUser();
+  beforeAll(() => {
+    F.createFakeUser();
   });
 
   afterAll(async () => {
