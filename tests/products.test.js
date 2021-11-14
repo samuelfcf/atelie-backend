@@ -194,7 +194,7 @@ describe('PUT /product/:id', () => {
   });
 });
 
-describe('POST /product:id', () => {
+describe('POST /product/:id', () => {
   beforeAll(async () => {
     await connection.query('INSERT INTO products VALUES ($1, $2, $3, $4);', [
       fakeProduct.id,
