@@ -18,11 +18,11 @@ const fakeProduct = {
   value: faker.datatype.number(),
 };
 
-/* const fakeSession = {
+const fakeSession = {
   id: faker.datatype.number(),
   users_id: fakeUser.id,
   token: faker.datatype.uuid(),
-}; */
+};
 
 const fakeOrders = {
   id: faker.datatype.number(),
@@ -102,10 +102,17 @@ describe('POST /cart/:id', () => {
   });
 });
 
-describe('GET /cart/:id0', () => {
-  test.only('returns 404 for cart not found', async () => {
+describe('GET /cart/:id', () => {
+  test('returns 404 for cart not found', async () => {
     const result = await supertest(app)
       .get('/cart/0');
     expect(result.status).toEqual(404);
+  });
+});
+
+describe('PUT /cart/:id', () => {
+  test('returns 400 for invalid body', async () => {
+    const result = await supertest(app).put(`cart/${fakeOrders.id}`).set('Authorization', `Bearer ${fakeSession.token}`).send({});
+    expect(result.status).toEqual(400);
   });
 });

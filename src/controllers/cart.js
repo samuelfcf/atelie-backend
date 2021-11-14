@@ -72,7 +72,6 @@ async function updateProductsQuantityInCart(req, res) {
     const { error } = productsCartUpdateQuantitySchema.validate({ products });
 
     if (error) {
-      console.log(error);
       return res.sendStatus(400);
     }
 
