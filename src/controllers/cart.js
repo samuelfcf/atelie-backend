@@ -1,5 +1,6 @@
 import connection from '../database/connection.js';
 import productCartSchema from '../schemas/productCartSchema.js';
+import productsCartUpdateQuantitySchema from '../schemas/productsCartUpdateQuantitySchema.js';
 
 async function createCart(req, res) {
   try {
@@ -63,8 +64,33 @@ async function clearCart(req, res) {
   }
 }
 
+async function updateProductsQuantityInCart(req, res) {
+  const { id } = req.params;
+  const { products } = req.body;
+
+  try {
+    const { error } = productsCartUpdateQuantitySchema.validate({ products });
+
+    if (error) {
+      console.log(error);
+      return res.sendStatus(400);
+    }
+
+    products.forEach(async (p) => {
+      await connection.query('UPDATE carts SET product_qty = $1 WHERE product_name = $2 AND order_id = $3;', [p.product_qty, p.product_name, id]);
+    });
+
+    return res.sendStatus(200);
+  } catch (err) {
+    return res.status(500).send({
+      message: 'Não foi possível atualizar a quantidade',
+    });
+  }
+}
+
 export {
   getCartProducts,
   createCart,
   clearCart,
+  updateProductsQuantityInCart,
 };
