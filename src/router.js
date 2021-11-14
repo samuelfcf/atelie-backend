@@ -4,6 +4,7 @@ import { postUser, signInUser, signOutUser } from './controllers/users.js';
 import updateAddress from './controllers/addresses.js';
 import updateOrder from './controllers/orders.js';
 import ensureAuth from './middlewares/ensureAnth.js';
+import { getFinalOrder, getOrderDetails } from './controllers/checkout.js';
 // eslint-disable-next-line object-curly-newline
 import { getProduct, getProducts, updateSizeQuantity, createCurrentOrder } from './controllers/products.js';
 import { getCartProducts, createCart, clearCart, updateProductsQuantityInCart } from './controllers/cart.js';
@@ -30,5 +31,8 @@ router.post('/cart/:id', createCart);
 router.get('/cart/:id', ensureAuth, getCartProducts);
 router.put('/cart/:id', ensureAuth, updateProductsQuantityInCart);
 router.delete('/cart/:id', ensureAuth, clearCart);
+
+router.get('/cart-products/:orderId', ensureAuth, getFinalOrder);
+router.get('/checkout/:orderId', ensureAuth, getOrderDetails);
 
 export default router;
