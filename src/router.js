@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { postUser, signInUser, signOutUser } from './controllers/users.js';
 import updateAddress from './controllers/addresses.js';
+import updateOrder from './controllers/orders.js';
 import ensureAuth from './middlewares/ensureAnth.js';
 // eslint-disable-next-line object-curly-newline
 import { getProduct, getProducts, updateSizeQuantity, createCurrentOrder, createCart } from './controllers/products.js';
@@ -16,8 +17,8 @@ router.get('/', (req, res) => {
 router.post('/sign-up', postUser);
 router.post('/sign-in', signInUser);
 router.delete('/sign-out', signOutUser);
-router.put('/users', updateAddress);
-router.put('/orders/:orderId', updateOrder);
+router.put('/users', ensureAuth, updateAddress);
+router.put('/orders/:id', ensureAuth, updateOrder);
 
 router.get('/products', getProducts);
 router.get('/product/:id', getProduct);
