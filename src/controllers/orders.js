@@ -28,7 +28,7 @@ async function finishOrder(req, res) {
   const { id } = req.params;
 
   try {
-    const result = await connection.query('UPDATE orders SET is_finished = $1 WHERE id = $2', [true, id]);
+    const result = await connection.query('UPDATE orders SET is_finished = true WHERE id = $1', [id]);
     if (result.rowCount === 0) {
       return res.sendStatus(404);
     }
