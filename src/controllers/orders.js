@@ -1,7 +1,7 @@
 import connection from '../database/connection.js';
 import paymentSchema from '../schemas/paymentSchema.js';
 
-export default async function updateOrder(req, res) {
+async function updateOrder(req, res) {
   const { payment } = req.body;
   const { id } = req.params;
 
@@ -23,3 +23,25 @@ export default async function updateOrder(req, res) {
     });
   }
 }
+
+async function finishOrder(req, res) {
+  const { id } = req.params;
+
+  try {
+    const result = await connection.query('UPDATE orders SET is_finished = true WHERE id = $1', [id]);
+    if (result.rowCount === 0) {
+      return res.sendStatus(404);
+    }
+
+    return res.sendStatus(200);
+  } catch {
+    return res.status(500).send({
+      message: 'Não foi possível finalizar o pedido',
+    });
+  }
+}
+
+export {
+  updateOrder,
+  finishOrder,
+};
