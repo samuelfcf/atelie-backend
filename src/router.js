@@ -8,6 +8,7 @@ import { getFinalOrder, getOrderDetails } from './controllers/checkout.js';
 // eslint-disable-next-line object-curly-newline
 import { getProduct, getProducts, updateSizeQuantity, createCurrentOrder } from './controllers/products.js';
 import { getCartProducts, createCart, clearCart, updateProductsQuantityInCart } from './controllers/cart.js';
+import sendEmailConfirmation from './controllers/email.js';
 
 const router = Router();
 
@@ -35,5 +36,6 @@ router.delete('/cart/:id', ensureAuth, clearCart);
 
 router.get('/cart-products/:orderId', ensureAuth, getFinalOrder);
 router.get('/checkout/:orderId', ensureAuth, getOrderDetails);
+router.post('/checkout/:orderId', ensureAuth, sendEmailConfirmation);
 
 export default router;
