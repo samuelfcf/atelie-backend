@@ -37,7 +37,6 @@ async function sendOrderEmail(req, res) {
 
     return res.sendStatus(200);
   } catch (err) {
-    console.log(err);
     return res.status(500).send({
       message: 'Não foi possível enviar o email',
     });

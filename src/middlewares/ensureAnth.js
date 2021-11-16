@@ -27,7 +27,6 @@ async function ensureAuth(req, res, next) {
 
     return next();
   } catch (err) {
-    console.log(err);
     return res.sendStatus(500);
   }
 }
