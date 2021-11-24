@@ -5,22 +5,12 @@ import connection from '../src/database/connection.js';
 import * as F from '../src/factories/users.factory.js';
 
 afterAll(async () => {
+  await F.deleteSessions();
+  await F.deleteUsers();
   connection.end();
 });
 
-describe('GET /', () => {
-  test('returns 200 for server ok!!', async () => {
-    const result = await supertest(app).get('/');
-
-    expect(result.status).toEqual(200);
-  });
-});
-
 describe('POST /sign-up', () => {
-  afterAll(async () => {
-    await F.deleteUsers();
-  });
-
   test('should return status 201 if the user was successfully registered', async () => {
     const result = await supertest(app).post('/sign-up').send(F.fakeUserSignUp);
     expect(result.status).toEqual(201);
@@ -39,15 +29,6 @@ describe('POST /sign-up', () => {
 });
 
 describe('POST /sign-in', () => {
-  beforeAll(() => {
-    F.createFakeUser();
-  });
-
-  afterAll(async () => {
-    await F.deleteSessions();
-    await F.deleteUsers();
-  });
-
   test('should return status 200 if the user was successfully logged', async () => {
     const result = await supertest(app).post('/sign-in').send(F.fakeUserSignIn);
     expect(result.status).toEqual(200);
@@ -65,37 +46,9 @@ describe('POST /sign-in', () => {
   });
 });
 
-describe('POST /sign-out', () => {
-  beforeAll(async () => {
-    await F.createFakeUser();
-    await F.createFakeSession();
-  });
-
-  afterAll(async () => {
-    await F.deleteSessions();
-    await F.deleteUsers();
-  });
-
-  test('should return status 200 if the user was successfully logged out', async () => {
-    const result = await supertest(app).delete('/sign-out').set('Authorization', `Bearer ${F.fakeSession.token}`);
-    expect(result.status).toEqual(200);
-  });
-
-  test('should return status 401 if the request was missing token', async () => {
-    const result = await supertest(app).delete('/sign-out');
-    expect(result.status).toEqual(401);
-  });
-});
-
 describe('PUT /users', () => {
   beforeAll(async () => {
-    await F.createFakeUser();
     await F.createFakeSession();
-  });
-
-  afterAll(async () => {
-    await F.deleteSessions();
-    await F.deleteUsers();
   });
 
   test('should return status 404 if the request token does not belong to any user', async () => {
@@ -116,5 +69,17 @@ describe('PUT /users', () => {
   test('should return status 400 if was a bad request', async () => {
     const result = await supertest(app).put('/users').send(F.wrongFakeAddress).set('Authorization', `Bearer ${F.fakeSession.token}`);
     expect(result.status).toEqual(400);
+  });
+});
+
+describe('POST /sign-out', () => {
+  test('should return status 200 if the user was successfully logged out', async () => {
+    const result = await supertest(app).delete('/sign-out').set('Authorization', `Bearer ${F.fakeSession.token}`);
+    expect(result.status).toEqual(200);
+  });
+
+  test('should return status 401 if the request was missing token', async () => {
+    const result = await supertest(app).delete('/sign-out');
+    expect(result.status).toEqual(401);
   });
 });
