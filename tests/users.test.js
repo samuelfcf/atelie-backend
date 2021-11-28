@@ -23,7 +23,9 @@ describe('POST /sign-up', () => {
   });
 
   test('should return status 400 if the request did not passed the joi validation', async () => {
-    const result = await supertest(app).post('/sign-up').send(F.wrongFakeUserSignUp);
+    const result = await supertest(app)
+      .post('/sign-up')
+      .send(F.wrongFakeUserSignUp);
     expect(result.status).toEqual(400);
   });
 });
@@ -36,12 +38,16 @@ describe('POST /sign-in', () => {
   });
 
   test('should return status 404 if the user was not registered', async () => {
-    const result = await supertest(app).post('/sign-in').send(F.fakeUserNotRegistered);
+    const result = await supertest(app)
+      .post('/sign-in')
+      .send(F.fakeUserNotRegistered);
     expect(result.status).toEqual(404);
   });
 
   test('should return status 400 if the request did not passed the joi validation', async () => {
-    const result = await supertest(app).post('/sign-in').send(F.wrongFakeUserSignIn);
+    const result = await supertest(app)
+      .post('/sign-in')
+      .send(F.wrongFakeUserSignIn);
     expect(result.status).toEqual(400);
   });
 });
@@ -52,7 +58,10 @@ describe('PUT /users', () => {
   });
 
   test('should return status 404 if the request token does not belong to any user', async () => {
-    const result = await supertest(app).put('/users').send(F.fakeAddress).set('Authorization', `Bearer ${F.fakeSession.token}123`);
+    const result = await supertest(app)
+      .put('/users')
+      .send(F.fakeAddress)
+      .set('Authorization', `Bearer ${F.fakeSession.token}123`);
     expect(result.status).toEqual(404);
   });
 
@@ -62,19 +71,27 @@ describe('PUT /users', () => {
   });
 
   test('should return status 200 if the user was successfully updated', async () => {
-    const result = await supertest(app).put('/users').send(F.fakeAddress).set('Authorization', `Bearer ${F.fakeSession.token}`);
+    const result = await supertest(app)
+      .put('/users')
+      .send(F.fakeAddress)
+      .set('Authorization', `Bearer ${F.fakeSession.token}`);
     expect(result.status).toEqual(200);
   });
 
   test('should return status 400 if was a bad request', async () => {
-    const result = await supertest(app).put('/users').send(F.wrongFakeAddress).set('Authorization', `Bearer ${F.fakeSession.token}`);
+    const result = await supertest(app)
+      .put('/users')
+      .send(F.wrongFakeAddress)
+      .set('Authorization', `Bearer ${F.fakeSession.token}`);
     expect(result.status).toEqual(400);
   });
 });
 
 describe('POST /sign-out', () => {
   test('should return status 200 if the user was successfully logged out', async () => {
-    const result = await supertest(app).delete('/sign-out').set('Authorization', `Bearer ${F.fakeSession.token}`);
+    const result = await supertest(app)
+      .delete('/sign-out')
+      .set('Authorization', `Bearer ${F.fakeSession.token}`);
     expect(result.status).toEqual(200);
   });
 
