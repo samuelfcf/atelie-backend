@@ -78,7 +78,7 @@ $ npm install
 # Create a .env.dev file and fill it using your environment variables following the .env.example
 
 # Run the application in development mode
-$ ntl -> start:dev
+$ npx ntl -> start:dev
 
 # The server will start at port: 4000
 
