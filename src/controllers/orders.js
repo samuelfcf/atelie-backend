@@ -11,10 +11,9 @@ async function updateOrder(req, res) {
       return res.sendStatus(400);
     }
 
-    const getPayment = await connection.query(
-      'SELECT * FROM payment_methods WHERE name = $1',
-      [payment],
-    );
+    const getPayment = await connection.query(`
+      SELECT * FROM payment_methods WHERE name = $1
+     `, [payment]);
     const paymentMethod = getPayment.rows[0];
     await connection.query('UPDATE orders SET payment_id = $1 WHERE id = $2', [
       paymentMethod.id,
