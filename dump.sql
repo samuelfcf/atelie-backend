@@ -485,6 +485,9 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 COPY public.carts (id, order_id, product_name, product_size, product_value, product_qty) FROM stdin;
+67	18	Calça Lacoste	M	39000	1
+65	16	Camisa Lacoste	M	25000	3
+66	17	Camisa Lacoste	M	25000	2
 \.
 
 
@@ -493,6 +496,10 @@ COPY public.carts (id, order_id, product_name, product_size, product_value, prod
 --
 
 COPY public.orders (id, user_id, date, is_finished, payment_id) FROM stdin;
+16	3	2021-11-28	t	1
+17	3	2021-11-28	t	1
+18	3	2021-11-28	t	1
+19	3	2021-11-28	f	\N
 \.
 
 
@@ -501,9 +508,9 @@ COPY public.orders (id, user_id, date, is_finished, payment_id) FROM stdin;
 --
 
 COPY public.payment_methods (id, name) FROM stdin;
-1	boleto
-2	paypal
-3	cartao
+1	Boleto
+2	Cartão
+3	PayPal
 \.
 
 
@@ -537,13 +544,13 @@ COPY public.products_sizes (id, product_id, size_id, quantity) FROM stdin;
 9	3	3	100
 6	2	3	100
 18	6	3	100
-2	1	2	100
 14	5	2	100
 15	5	3	100
-5	2	2	100
 17	6	2	100
 3	1	3	100
 1	1	1	100
+2	1	2	98
+5	2	2	99
 \.
 
 
@@ -552,6 +559,8 @@ COPY public.products_sizes (id, product_id, size_id, quantity) FROM stdin;
 --
 
 COPY public.sessions (id, users_id, token) FROM stdin;
+22	3	f255ed68-cd18-48f4-be5b-c67db7b9d59e
+23	3	6fe4c7b6-f790-4282-8a39-2d7b6671f43c
 \.
 
 
@@ -571,6 +580,7 @@ COPY public.sizes (id, name) FROM stdin;
 --
 
 COPY public.users (id, name, email, password, address_number, address_cep) FROM stdin;
+3	Samuel	samuelfelipef@gmail.com	$2b$10$dAEH.DYhph090Q8LiZm3heTPX6Zb.rkQR.3ID8M8enuNIPqzzFjte	111	03106010
 \.
 
 
@@ -578,7 +588,7 @@ COPY public.users (id, name, email, password, address_number, address_cep) FROM 
 -- Name: carts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.carts_id_seq', 64, true);
+SELECT pg_catalog.setval('public.carts_id_seq', 67, true);
 
 
 --
@@ -592,7 +602,7 @@ SELECT pg_catalog.setval('public.carts_order_id_seq', 1, false);
 -- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.orders_id_seq', 15, true);
+SELECT pg_catalog.setval('public.orders_id_seq', 19, true);
 
 
 --
@@ -634,7 +644,7 @@ SELECT pg_catalog.setval('public.products_sizes_size_id_seq', 1, false);
 -- Name: sessions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.sessions_id_seq', 21, true);
+SELECT pg_catalog.setval('public.sessions_id_seq', 23, true);
 
 
 --
@@ -655,7 +665,7 @@ SELECT pg_catalog.setval('public.sizes_id_seq', 3, true);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 2, true);
+SELECT pg_catalog.setval('public.users_id_seq', 3, true);
 
 
 --
